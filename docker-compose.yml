@@ -1,0 +1,28 @@
+version: '2'
+services:
+  # web with xdebug
+  web:
+    image: haittamaa/d8   
+    ports:
+      - "8080:80"
+      - "9000"
+    environment:
+      - SERVERNAME=website.local
+      - SERVERALIAS=*.website.local
+      - DOCUMENTROOT=drupal
+    volumes:
+      - ./:/var/www/html
+      - ./httpd.ini:/usr/local/etc/php/conf.d/httpd-custom.ini
+    links:
+      - database:mysql
+    tty: true
+
+  # database container
+  database:
+    # official mysql available tags: latest, 8, 5.7, 5.6, 5.5 ...
+    image: mysql:5.7
+    ports:
+      - "3337:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysqlroot
+      - MYSQL_DATABASE=test_db
